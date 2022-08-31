@@ -1,11 +1,14 @@
 import React from "react";
 import { useRecoilState } from "recoil";
-import { createPoststate, writePostState } from "../atoms/signAtoms";
+import {
+  editedPoststate,
+  editPostState,
+  writePostState,
+} from "../atoms/signAtoms";
 
 const WriteFirstPost = () => {
-  const [post, setPost] = useRecoilState(writePostState);
-  const [createPost, setCreatePost] = useRecoilState(createPoststate);
-
+  const [editPost, setEditPost] = useRecoilState(editPostState);
+  const [editedPost, setEditedPost] = useRecoilState(editedPoststate);
   return (
     <div>
       <section className="bg-gray-50 dark:bg-gray-900 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 md:inset-0 h-modal md:h-full">
@@ -14,14 +17,14 @@ const WriteFirstPost = () => {
             <button
               className="absolute right-0 -top-9"
               onClick={() => {
-                setPost(false);
+                setEditPost(false);
               }}
             >
               <img src="/x-icon.svg" alt="" className="" />
             </button>
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Write a Post
+                Edit the Post
               </h1>
               <form className="space-y-4 md:space-y-6">
                 <div>
@@ -34,6 +37,7 @@ const WriteFirstPost = () => {
                   <input
                     type="text"
                     name="title"
+                    defaultValue="I really love Javascript and react"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="Title goes here"
                     required=""
@@ -54,6 +58,9 @@ const WriteFirstPost = () => {
                     placeholder="Body goes here"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     required=""
+                    defaultValue="Javascript is really fun to work with and it is really is a really
+                    versatile language, its fun to manage both the frontend and the
+                    backend ddddd"
                   />
                 </div>
                 <div>
@@ -68,13 +75,14 @@ const WriteFirstPost = () => {
                     name="title"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="#fun #coding"
+                    defaultValue="#coding #fun"
                   />
                 </div>
 
                 <button
                   onClick={() => {
-                    setPost(false);
-                    setCreatePost(true);
+                    setEditPost(false);
+                    setEditedPost(true);
                   }}
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >

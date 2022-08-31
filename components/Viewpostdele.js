@@ -1,26 +1,28 @@
 import React from "react";
 import { useRecoilState } from "recoil";
 import {
+  delePost1State,
   deletePostState,
   editPostState,
   postViewState,
+  viewDele1State,
 } from "../atoms/signAtoms";
-import Deletepost from "./Deletepost";
+import Deletepost from "../components/Deletepost";
 
 const Viewpost = () => {
-  const [view, setView] = useRecoilState(postViewState);
-  const [deletePost, setDeletePost] = useRecoilState(deletePostState);
-  const [editPost, setEditPost] = useRecoilState(editPostState);
+  const [delePost1, setDelePost1] = useRecoilState(delePost1State);
+  const [viewDele1, setViewDele1] = useRecoilState(viewDele1State);
+
   return (
     <div>
-      {deletePost ? <Deletepost /> : null}
+      {delePost1 ? <Deletepost /> : null}
       <section className="bg-gray-50 dark:bg-gray-900 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 md:inset-0 h-modal md:h-full">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="relative w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <button
               className="absolute right-0 -top-9"
               onClick={() => {
-                setView(false);
+                setViewDele1(false);
               }}
             >
               <img src="/x-icon.svg" alt="" className="" />
@@ -62,7 +64,7 @@ const Viewpost = () => {
                   <button
                     type=""
                     onClick={() => {
-                      setView(false);
+                      setViewDele1(false);
                       setEditPost(true);
                     }}
                     className="w-2/5 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
@@ -72,7 +74,7 @@ const Viewpost = () => {
                   <button
                     type=""
                     onClick={() => {
-                      setDeletePost(true);
+                      setDelePost1(true);
                     }}
                     className="w-2/5 text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   >

@@ -1,10 +1,169 @@
-import React from "react";
 import { useRecoilState } from "recoil";
 import { loginState, signupState } from "../atoms/signAtoms";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+const baseUrl = "http://localhost:8000/api/user";
 
 const Signup = () => {
   const [signup, setSignup] = useRecoilState(signupState);
   const [login, setLogin] = useRecoilState(loginState);
+  const [username, setUsername] = useState({ username: "" });
+  const [email, setEmail] = useState({ email: "" });
+  const [password, setPassword] = useState({ password: "" });
+  const [confirmPassword, setConfirmPassword] = useState({
+    confirmPassword: "",
+  });
+  const [invalidUser, setInvalidUser] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [otpSuccess, setOtpSuccess] = useState(false);
+  const [error, setError] = useState("");
+  const [otp, setOtp] = useState("");
+  const [UserId, setUserId] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password.trim().length < 8) {
+      return setError("Password must be longer than 8 characters!");
+    }
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match!");
+    }
+    try {
+      const { data } = await axios.post(`${baseUrl}/create`, {
+        username,
+        email,
+        password,
+      });
+      if (data.success) {
+        setSuccess(true);
+        setUserId(data.id);
+        console.log(data.id);
+      }
+    } catch (error) {
+      if (error?.response?.data) {
+        const { data } = error.response;
+        console.log(data);
+        if (!data.success) return setInvalidUser(data.error);
+        return console.log(error.response.data);
+      }
+      console.log(error);
+    }
+  };
+
+  const handleSubmitOtp = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(`${baseUrl}/verify-email`, {
+        UserId,
+        otp,
+      });
+      if (data.success) {
+        setSuccess(true);
+      }
+    } catch (error) {
+      if (error?.response?.data) {
+        const { data } = error.response;
+        console.log(data);
+        if (!data.success)
+          return setInvalidUser("Thank you, You are now Successfully verified");
+        return console.log(error.response.data);
+      }
+      console.log(error);
+    }
+  };
+
+  if (invalidUser)
+    return (
+      <div>
+        <section className="bg-gray-50 dark:bg-gray-900 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+              <h2 className="text-xl font-bold leading-tight text-center mb-8 tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                {invalidUser}
+              </h2>
+              <div className="text-center">
+                <button
+                  onClick={() => {
+                    setSignup(false);
+                  }}
+                  className="w-1/2 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Home
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+
+  if (success)
+    return (
+      <div>
+        <section className="bg-gray-50 dark:bg-gray-900 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+              <h2 className="text-xl font-bold leading-tight text-center tracking-tight mb-8 text-gray-900 md:text-2xl dark:text-white">
+                Email Verification OTP has been sent your email
+              </h2>
+              <form
+                className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
+                onSubmit={handleSubmitOtp}
+              >
+                <div>
+                  <label
+                    htmlFor="otp"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Enter your otp
+                  </label>
+                  <input
+                    onChange={({ target }) => setOtp(target.value)}
+                    type="text"
+                    name="otp"
+                    id="otp"
+                    className="bg-gray-50 text-center border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1234"
+                    required=""
+                  />
+                </div>
+                <p className="text-sm font-medium">OTP will expire in 5 mins</p>
+                <button
+                  type="submit"
+                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Verify OTP
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+
+  if (otpSuccess)
+    return (
+      <div>
+        <section className="bg-gray-50 dark:bg-gray-900 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+              <h2 className="text-xl font-bold leading-tight text-center tracking-tight mb-8 text-gray-900 md:text-2xl dark:text-white">
+                Thank you, You are now Successfully verified
+              </h2>
+              <button
+                onClick={() => {
+                  setSignup(false);
+                }}
+                type="submit"
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Home
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
 
   return (
     <div>
@@ -25,9 +184,26 @@ const Signup = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Create and account
+                Create an account
               </h1>
-              <form className="space-y-4 md:space-y-6" action="#">
+              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    htmlFor="username"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Username
+                  </label>
+                  <input
+                    onChange={({ target }) => setUsername(target.value)}
+                    type="text"
+                    name="username"
+                    id="username"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="username"
+                    required=""
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor="email"
@@ -36,6 +212,7 @@ const Signup = () => {
                     Your email
                   </label>
                   <input
+                    onChange={({ target }) => setEmail(target.value)}
                     type="email"
                     name="email"
                     id="email"
@@ -52,6 +229,7 @@ const Signup = () => {
                     Password
                   </label>
                   <input
+                    onChange={({ target }) => setPassword(target.value)}
                     type="password"
                     name="password"
                     id="password"
@@ -68,9 +246,10 @@ const Signup = () => {
                     Confirm password
                   </label>
                   <input
-                    type="confirm-password"
-                    name="confirm-password"
-                    id="confirm-password"
+                    onChange={({ target }) => setConfirmPassword(target.value)}
+                    type="confirmPassword"
+                    name="confirmPassword"
+                    id="confirmPassword"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
@@ -101,6 +280,11 @@ const Signup = () => {
                     </label>
                   </div>
                 </div>
+                {error && (
+                  <p className="text-center font-medium text-red-500">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"

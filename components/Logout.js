@@ -1,16 +1,10 @@
 import React from "react";
 import { useRecoilState } from "recoil";
-import {
-  delePost1State,
-  delePost1ststate,
-  deletePostState,
-  viewDele1State,
-} from "../atoms/signAtoms";
+import { logOutState, navLoginState } from "../atoms/signAtoms";
 
 const Deletepost = () => {
-  const [deletePost, setDelePost1] = useRecoilState(delePost1State);
-  const [delePost1st, setDelePost1st] = useRecoilState(delePost1ststate);
-  const [viewDele1, setViewDele1] = useRecoilState(viewDele1State);
+  const [logOut, setLogOut] = useRecoilState(logOutState);
+  const [navLogin, setNavLogin] = useRecoilState(navLoginState);
 
   return (
     <div className="backdrop-brightness-50 mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
@@ -19,7 +13,7 @@ const Deletepost = () => {
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <button
               onClick={() => {
-                setDelePost1(false);
+                setLogOut(false);
               }}
               type="button"
               className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
@@ -57,13 +51,12 @@ const Deletepost = () => {
                 ></path>
               </svg>
               <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                Are you sure you want to delete this post?
+                Are you sure you want to Logout?
               </h3>
               <button
                 onClick={() => {
-                  setDelePost1st(true);
-                  setDelePost1(false);
-                  setViewDele1(false);
+                  setNavLogin(false);
+                  setLogOut(false);
                 }}
                 data-modal-toggle="popup-modal"
                 type="button"
@@ -73,7 +66,7 @@ const Deletepost = () => {
               </button>
               <button
                 onClick={() => {
-                  setDelePost1(false);
+                  setLogOut(false);
                 }}
                 data-modal-toggle="popup-modal"
                 type="button"

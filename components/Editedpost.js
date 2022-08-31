@@ -1,21 +1,22 @@
 import React from "react";
 
-const Blogitem = () => {
+const Editedpost = () => {
   return (
     <div>
       <div>
         <div className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
             <h5 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy technology acquisitions 2021
+              I really love Javascript and react
             </h5>
           </a>
           <p className="mb-5 font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
+            Javascript is really fun to work with and it is really is a really
+            versatile language, its fun to manage both the frontend and the
+            backend
           </p>
           <p className="mb-6 font-normal dark:text-gray-400 text-blue-700">
-            #fun #playing
+            #coding #fun #javascript
           </p>
           <a
             href="#"
@@ -42,4 +43,4 @@ const Blogitem = () => {
   );
 };
 
-export default Blogitem;
+export default Editedpost;
